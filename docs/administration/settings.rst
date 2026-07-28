@@ -118,15 +118,19 @@ Database
 See :doc:`storage` for switching between Postgres and SQLite.
 
 ``PS_DATABASE_URI``
-  Single connection string of the form ``postgres://user:password@host:port/dbname``.
-  Takes precedence over the ``DJANGO_DB_*`` variables below.
+  Single connection string of the form ``postgres://user:password@host:port/dbname``
+  (a SQLite URI such as ``sqlite:////path/to/database.sqlite`` works as well).
+  Takes precedence over the ``DJANGO_DB_*`` variables below. Note that this
+  variable is also used by the PowerSync service, which only supports Postgres.
 
 ``DJANGO_DB_ENGINE``
-  Default ``django.db.backends.postgresql``. Use ``django.db.backends.sqlite3``
-  for SQLite.
+  Required unless ``PS_DATABASE_URI`` is set. Use
+  ``django.db.backends.postgresql`` for Postgres or
+  ``django.db.backends.sqlite3`` for SQLite.
 
 ``DJANGO_DB_DATABASE``
-  Database name (Postgres) or full path to the SQLite file.
+  Required unless ``PS_DATABASE_URI`` is set. Database name (Postgres) or full
+  path to the SQLite file.
 
 ``DJANGO_DB_USER``, ``DJANGO_DB_PASSWORD``, ``DJANGO_DB_HOST``, ``DJANGO_DB_PORT``
   Postgres connection details. Ignored for SQLite. Not needed when

@@ -24,10 +24,14 @@ file. Otherwise, create an empty file and make sure permissions are correct::
     touch ./database.sqlite
     chmod 664 ./database.sqlite
 
-In your env file::
+In your env file, replace the Postgres connection string in ``PS_DATABASE_URI``
+with a SQLite one (the path is the one *within* the container)::
 
-    DJANGO_DB_ENGINE=django.db.backends.sqlite3
-    DJANGO_DB_DATABASE=/home/wger/db/database.sqlite
+    PS_DATABASE_URI=sqlite:////home/wger/db/database.sqlite
+
+Note that simply adding the ``DJANGO_DB_*`` variables is not enough, since
+``PS_DATABASE_URI`` takes precedence over them. Also, PowerSync only works
+with Postgres, so the sync services won't be available with SQLite.
 
 In ``docker-compose.yml``, mount the SQLite file into the web and celery
 services, remove the dependency on the ``db`` service, and delete the ``db``

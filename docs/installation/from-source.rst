@@ -114,7 +114,7 @@ A minimal example:
 
     # Postgres
     DJANGO_DB_ENGINE=django.db.backends.postgresql
-    DJANGO_DB_NAME=wger
+    DJANGO_DB_DATABASE=wger
     DJANGO_DB_USER=wger
     DJANGO_DB_PASSWORD=wger
     DJANGO_DB_HOST=localhost
@@ -123,7 +123,7 @@ A minimal example:
 For SQLite, swap the database block for::
 
     DJANGO_DB_ENGINE=django.db.backends.sqlite3
-    DJANGO_DB_NAME=/home/wger/db/database.sqlite
+    DJANGO_DB_DATABASE=/home/wger/db/database.sqlite
 
 The file contains secrets, so restrict permissions::
 
