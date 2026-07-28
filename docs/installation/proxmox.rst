@@ -3,6 +3,9 @@
 Proxmox
 =======
 
+.. note:: it seems proxmox removed wger from their repos
+
+
 There is a community-maintained installation script for Proxmox VE:
 
   https://community-scripts.org/scripts/wger
