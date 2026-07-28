@@ -69,16 +69,6 @@ To solve this, update the env file and either
   as there are some security considerations.
 
 
-Mobile app stuck on "Connecting"
---------------------------------
-
-If you can log into the mobile app, but the sync status stays on "Connecting"
-forever and your data never show up, something on your network is most likely
-blocking the connection the app uses to synchronise it. Typical culprits are VPN
-apps, ad blockers such as Pi-hole or AdGuard, antivirus apps and some mobile
-providers. Try switching between WiFi and mobile data, or turn off the
-VPN or ad blocker for a moment and check whether the sync starts working.
-
 Wrong pagination links
 ----------------------
 
@@ -96,3 +86,39 @@ while in your home network, etc.
 Make sure that you forward the host header as well as the protocol header to
 the application. Consult the `Django docs <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpRequest.get_host>`_
 for details.
+
+
+Mobile app stuck on "Connecting"
+--------------------------------
+
+If you can log into the mobile app, but the sync status stays on "Connecting"
+forever and your data never show up, something on your network is most likely
+blocking the connection the app uses to synchronise it. Typical culprits are VPN
+apps, ad blockers such as Pi-hole or AdGuard, antivirus apps and some mobile
+providers. Try switching between WiFi and mobile data, or turn off the
+VPN or ad blocker for a moment and check whether the sync starts working.
+
+Mobile app reports "Sync Service Unavailable"
+---------------------------------------------
+
+This message means the app can reach your wger server (so logging in works), but
+not the PowerSync service that handles the offline synchronisation. The usual
+suspects:
+
+* ``SITE_URL`` is wrong: the server tells the app to sync against ``SITE_URL``
+  plus ``/ps/``, so a wrong default, a missing port or a domain your phone
+  can't reach all break the sync. Set it to the exact URL you use to reach
+  the application and recreate the containers. Check the current value by
+  opening ``https://your.wger.url/api/v2/powersync-token`` in a browser (logged
+  in): the ``powersync_url`` field is the address the app will use.
+* The app doesn't go through nginx: the sync service is only reachable through
+  the nginx service under ``/ps/``. Don't point the app (or ``SITE_URL``)
+  directly at the django container.
+* Your own reverse proxy doesn't forward ``/ps/`` or cuts off long-running
+  connections; see the ``/ps/`` section in our nginx.conf for reference.
+* The PowerSync container isn't running: check ``docker compose ps`` and
+  ``docker compose logs powersync``. You might be using an older docker compose
+  setup without the powersync service.
+
+To test that the service is configured correctly, open ``https://your.wger.url/ps/probes/liveness``
+with your browser. A short status response means the sync service is reachable.
