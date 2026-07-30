@@ -29,6 +29,10 @@ already in use, set ``WGER_HOST_PORT`` in the same ``.env`` file, for example:
 
     echo "WGER_HOST_PORT=8001" >> .env
 
+When using the ``dev-postgres`` environment, the PostgreSQL and PowerSync host
+ports can be changed in the same way with ``POSTGRES_HOST_PORT`` (default 5432)
+and ``POWERSYNC_HOST_PORT`` (default 8080).
+
 Start docker watch in the docker folder:
 
 .. code-block:: bash
