@@ -251,10 +251,12 @@ JWT authentication
 ------------------
 
 ``ACCESS_TOKEN_LIFETIME``
-  Default ``10`` (minutes). Short-lived access token.
+  Default ``10``, in **minutes**. Short-lived access token.
 
 ``REFRESH_TOKEN_LIFETIME``
-  Default ``2880`` (hours, ≈ 4 months). Long-lived refresh token.
+  Default ``2880``, in **hours** (roughly 4 months). Long-lived
+  refresh token. Mind the unit: it is hours, not days. Setting for example
+  ``24`` logs users out of the app after just one day of not opening it.
 
 For SSO via reverse proxy (``AUTH_PROXY_*``), see :doc:`auth_proxy`.
 
