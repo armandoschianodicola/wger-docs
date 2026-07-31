@@ -74,18 +74,40 @@ Wrong pagination links
 
 (note that this mostly applies if you are running your own reverse proxy)
 
-For the application to work correctly, you need to make sure that the reverse
-proxy is correctly configured.
+The application builds absolute URLs (for example the "next" links in the API
+pagination) from the headers of the incoming request. When these headers get
+lost on the way through a reverse proxy, those URLs point to the wrong host or
+use ``http`` instead of ``https``. Some features then break in subtle ways:
+pagination links might point to "localhost" or only work inside your home
+network, and the mobile app shows a warning at login ("Server misconfiguration
+detected, headers are not being passed correctly").
 
-If this is not the case, some features might break in subtle ways. E.g. the
-pagination links in the api are constructed by django from the passed headers.
-In this case you might be able to correctly reach and fetch some data but the
-"next" link might then point to "localhost", which will not work, only work
-while in your home network, etc.
+Two things need to be in place:
 
-Make sure that you forward the host header as well as the protocol header to
-the application. Consult the `Django docs <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpRequest.get_host>`_
-for details.
+1. The reverse proxy must forward the host and protocol headers to the
+   application. The nginx service in the docker compose setup already does
+   this, but if you put your own proxy in front of it (or replace it), make
+   sure it sets these headers::
+
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Host $http_host;
+
+   When chaining more than one proxy, the outermost one must set the headers
+   and the inner ones must pass them through unchanged (see the
+   ``X-Forwarded-Proto`` handling in our nginx.conf for an example).
+
+2. The application ignores these headers unless you explicitly allow them.
+   Set the following in your env file and recreate the containers::
+
+      X_FORWARDED_PROTO_HEADER_SET=True
+      USE_X_FORWARDED_HOST=True
+
+   See :doc:`settings` for details and the security considerations.
+
+To check that everything works, open ``https://your.wger.url/api/v2/exercise/?limit=1``
+in your browser: the ``next`` link in the response has to start with exactly
+the URL and protocol (http / https) you use to reach the application.
 
 
 Mobile app stuck on "Connecting"
