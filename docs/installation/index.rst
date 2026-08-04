@@ -16,6 +16,7 @@ option, but they're not as extensively tested or are submitted by the community.
    kubernetes
    from-source
    truenas
+   cloudron
    proxmox
 
 :doc:`docker`
@@ -31,6 +32,9 @@ option, but they're not as extensively tested or are submitted by the community.
 
 :doc:`truenas`
     Installation guide for TrueNAS SCALE.
+
+:doc:`cloudron`
+    Package for Cloudron.
 
 :doc:`proxmox`
     Proxmox installation script.
